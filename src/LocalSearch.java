@@ -28,7 +28,7 @@ public class LocalSearch implements MoveController {
 
         MovePair temp = switch (surrounding) {
             case 1, 2, 3 -> new MovePair(heuristicCheck(neighbors, board));
-            default -> new MovePair(pair.a, pair.b); // if there are 0 or 4 surrounding filled squares, return the current square
+            default -> new MovePair(pair.a, pair.b);
         };
 
         // prevent object reference from changing
@@ -37,7 +37,7 @@ public class LocalSearch implements MoveController {
 
         // check if the square is filled
         while (board[pair.a][pair.b].getText().equals("X") || board[pair.a][pair.b].getText().equals("O")) {
-            // if the square is filled, generate a new random square
+            // if the square is filled, generate a new random square regardless of surrounding filled squares
             pair.a = (int) (Math.random() * 8);
             pair.b = (int) (Math.random() * 8);
         }
