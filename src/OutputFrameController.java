@@ -77,7 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new Bot();
+        this.bot = new Bot(this);
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -358,5 +358,9 @@ public class OutputFrameController {
         }
 
         this.selectedCoordinates(i, j);
+    }
+
+    public Button[][] getButtons() {
+        return buttons;
     }
 }
