@@ -5,6 +5,7 @@ public class Bot {
     public Bot(OutputFrameController controller) {
         // edit this line to change the algorithm
         moveController = new LocalSearch(controller);
+        //  moveController = new Minimax(controller);
     }
 
     // Move using Local Search Algorithm
