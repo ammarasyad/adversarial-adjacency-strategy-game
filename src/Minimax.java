@@ -19,7 +19,7 @@ public class Minimax implements MoveController {
     @Override
     public int[] move() {
         Board board = new Board(controller,player);
-        Object[] minimax = minimaxValue(new Object[]{board,new int[]{0,0}},true,MIN_VAL,MAX_VAL);
+        Object[] minimax = minimaxValue(new Object[]{board,new int[]{0,0}},true,MIN_VAL,MAX_VAL, controller.roundsLeft);
         Object[] value = (Object[]) minimax[0];
         return (int[]) value[1];
     }
@@ -27,11 +27,14 @@ public class Minimax implements MoveController {
 
     // find optimal value of all boards using minimax algorithm and a-b pruning
     // TODO: find the corresponding best next step based on the optimal value calculated
-    public Object[] minimaxValue (Object[] nodeValues, boolean isMaximizing, int alpha, int beta) {
+    public Object[] minimaxValue (Object[] nodeValues, boolean isMaximizing, int alpha, int beta, int round) {
         Board board = (Board) nodeValues[0];
         Object[] bestBranch = new Object[]{nodeValues, 0};
 
         if (board.isBoardFull()) {
+            return new Object[]{nodeValues, board.getFunctionValue()};
+        }
+        if (round==0){
             return new Object[]{nodeValues, board.getFunctionValue()};
         }
 
@@ -41,7 +44,7 @@ public class Minimax implements MoveController {
             bestVal = MIN_VAL;
 
             for (Object[] objects : branch) {
-                Object[] currentVal = minimaxValue(objects, false, alpha, beta);
+                Object[] currentVal = minimaxValue(objects, false, alpha, beta, round-1);
                 int temp = (int) currentVal[1];
 
                 bestVal = Math.max(bestVal, temp);
@@ -58,7 +61,7 @@ public class Minimax implements MoveController {
             bestVal = MAX_VAL;
 
             for (Object[] objects : branch) {
-                Object[] currentVal = minimaxValue(objects, true, alpha, beta);
+                Object[] currentVal = minimaxValue(objects, true, alpha, beta, round-1);
                 int temp = (int) currentVal[1];
 
                 bestVal = Math.min(bestVal, temp);

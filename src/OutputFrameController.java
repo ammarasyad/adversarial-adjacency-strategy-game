@@ -49,7 +49,7 @@ public class OutputFrameController {
     private boolean playerXTurn;
     private int playerXScore;
     private int playerOScore;
-    private int roundsLeft;
+    public int roundsLeft;
 
     private boolean isBotFirst; // later disabled
     private Bot botX;
