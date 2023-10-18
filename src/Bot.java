@@ -6,7 +6,7 @@ public class Bot {
         // edit this line to change the algorithm
         MoveController selectedController;
         if (mode.equals("Minimax Bot")) {
-            selectedController = new Minimax(controller);
+            selectedController = new Minimax(controller, false);
         }
         else if (mode.equals("Local Search Bot")) {
             selectedController = new LocalSearch(controller);
