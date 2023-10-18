@@ -254,9 +254,9 @@ public class OutputFrameController {
 
                 if (!isBotFirst && this.roundsLeft == 0) { // Game has terminated.
                     this.endOfGame();       // Determine & announce the winner.
+                } else {
+                    this.moveBot(this.playerXTurn);
                 }
-
-                this.moveBot(this.playerXTurn);
             }
         }
     }
