@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The OutputFrameController class.  It controls button input from the users when
@@ -49,8 +50,14 @@ public class OutputFrameController {
     private int playerXScore;
     private int playerOScore;
     private int roundsLeft;
-    private boolean isBotFirst;
-    private Bot bot;
+
+    private boolean isBotFirst; // later disabled
+    private Bot botX;
+    private Bot botO;
+
+    private String playerMode1;
+    private String playerMode2;
+    private boolean isThereHuman;
 
 
     private static final int ROW = 8;
@@ -69,21 +76,58 @@ public class OutputFrameController {
      * @param isBotFirst True if bot is first, false otherwise.
      *
      */
-    void getInput(String name1, String name2, String rounds, boolean isBotFirst){
+    void getInput(String name1, String name2, String rounds, boolean isBotFirst, String mode1, String mode2){
         this.playerXName.setText(name1);
         this.playerOName.setText(name2);
         this.roundsLeftLabel.setText(rounds);
         this.roundsLeft = Integer.parseInt(rounds);
-        this.isBotFirst = isBotFirst;
+        // this.isBotFirst = isBotFirst;
 
+        this.isBotFirst = false; // disabling this value to improve consistency
+
+        this.playerMode1 = mode1;
+        this.playerMode2 = mode2;
+
+        if (mode1.equals("Human") || mode2.equals("Human")) {
+            this.isThereHuman = true;
+        } else {
+            this.isThereHuman = false;
+        }
         // Start bot
-        this.bot = new Bot(this);
+        this.botX = new Bot(this, playerMode1);
+        this.botO = new Bot(this, playerMode2);
+        
+
         this.playerXTurn = !isBotFirst;
-        if (this.isBotFirst) {
-            this.moveBot();
+        // if (this.isBotFirst) {
+        //     this.moveBot(this.playerXTurn);
+        // }
+        
+        buttonClickableReset();
+
+        if (!this.playerMode1.equals("Human")) {
+            this.moveBot(this.playerXTurn);
         }
     }
 
+    private void buttonClickableReset() {
+        for (int i = 0; i < ROW; i++){
+            for (int j = 0; j < COL; j++) {
+
+                // Add ActionListener to each button such that when it is clicked, it calls
+                // the selected coordinates method with its i and j coordinates.
+                final int finalI = i;
+                final int finalJ = j;
+
+                this.buttons[i][j].setOnAction(
+                    isThereHuman ? 
+                    event -> this.selectedCoordinates(finalI, finalJ)
+                    :
+                    null
+                );
+            }
+        }
+    }
 
 
     /**
@@ -116,11 +160,6 @@ public class OutputFrameController {
                 this.buttons[i][j].setCursor(Cursor.HAND);
                 this.gameBoard.add(this.buttons[i][j], j, i);
 
-                // Add ActionListener to each button such that when it is clicked, it calls
-                // the selected coordinates method with its i and j coordinates.
-                final int finalI = i;
-                final int finalJ = j;
-                this.buttons[i][j].setOnAction(event -> this.selectedCoordinates(finalI, finalJ));
             }
         }
 
@@ -197,7 +236,7 @@ public class OutputFrameController {
                 }
 
                 // Bot's turn
-                this.moveBot();
+                this.moveBot(this.playerXTurn);
             }
             else {
                 this.playerXBoxPane.setStyle("-fx-background-color: #90EE90; -fx-border-color: #D3D3D3;");
@@ -216,6 +255,8 @@ public class OutputFrameController {
                 if (!isBotFirst && this.roundsLeft == 0) { // Game has terminated.
                     this.endOfGame();       // Determine & announce the winner.
                 }
+
+                this.moveBot(this.playerXTurn);
             }
         }
     }
@@ -346,8 +387,22 @@ public class OutputFrameController {
         primaryStage.show();
     }
 
-    private void moveBot() {
-        int[] botMove = this.bot.move();
+    private void moveBot(boolean isPlayerX) {
+        //simulate thinking time and add delay
+        
+
+        int[] botMove;
+    
+        if (isPlayerX) {
+            if (this.playerMode1.equals("Human")) return;
+
+            botMove = this.botX.move();
+        } else {
+            if (this.playerMode2.equals("Human")) return;
+
+            botMove = this.botO.move();
+        }
+        
         int i = botMove[0];
         int j = botMove[1];
 

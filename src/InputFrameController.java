@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class InputFrameController{
 
-    public CheckBox isBotFirst;
+    // public CheckBox isBotFirst;
     @FXML
     private TextField player1;
 
@@ -31,6 +31,12 @@ public class InputFrameController{
 
     @FXML
     private ComboBox<String> numberOfRounds;
+
+    @FXML
+    private ComboBox<String> playerMode1;
+
+    @FXML
+    private ComboBox<String> playerMode2;
 
 
     /**
@@ -45,6 +51,16 @@ public class InputFrameController{
                 "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28");
         this.numberOfRounds.setItems(numberOfRoundsDropdown);
         this.numberOfRounds.getSelectionModel().select(0);
+
+        ObservableList<String> playerMode1Dropdown = FXCollections.observableArrayList(
+                 "Human", "Minimax Bot", "Local Search Bot", "Genetic Search Bot");
+        this.playerMode1.setItems(playerMode1Dropdown);
+        this.playerMode1.getSelectionModel().select(0);
+
+        ObservableList<String> playerMode2Dropdown = FXCollections.observableArrayList(
+                 "Human", "Minimax Bot", "Local Search Bot", "Genetic Search Bot");
+        this.playerMode2.setItems(playerMode2Dropdown);
+        this.playerMode2.getSelectionModel().select(1);
     }
 
 
@@ -58,6 +74,8 @@ public class InputFrameController{
         this.player1.setText("");
         this.player2.setText("");
         this.numberOfRounds.getSelectionModel().select(0);
+        this.playerMode1.getSelectionModel().select(0);
+        this.playerMode2.getSelectionModel().select(1);
     }
 
 
@@ -78,16 +96,24 @@ public class InputFrameController{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("OutputFrame.fxml"));
             Parent root = loader.load();
 
-            // Get controller of output frame and pass input including player names and number of rounds chosen.
-            OutputFrameController outputFC = loader.getController();
-            outputFC.getInput(this.player1.getText(), this.player2.getText(), this.numberOfRounds.getValue(), this.isBotFirst.isSelected());
-
-            // Open the new frame.
+             // Open the new frame.
             Stage secondaryStage = new Stage();
             secondaryStage.setTitle("Game Board Display");
             secondaryStage.setScene(new Scene(root));
             secondaryStage.setResizable(true);
             secondaryStage.show();
+
+            // TODO : wait for render here
+
+
+            // Get controller of output frame and pass input including player names and number of rounds chosen.
+            OutputFrameController outputFC = loader.getController();
+
+            // outputFC.getInput(this.player1.getText(), this.player2.getText(), this.numberOfRounds.getValue(), this.isBotFirst.isSelected(), this.playerMode1.getValue(), this.playerMode2.getValue());
+            // force isBotFirst to be false
+           outputFC.getInput(this.player1.getText(), this.player2.getText(), this.numberOfRounds.getValue(), false, this.playerMode1.getValue(), this.playerMode2.getValue());
+
+           
         }
     }
 

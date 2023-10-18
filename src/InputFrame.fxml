@@ -32,12 +32,26 @@
             </Label>
             <ComboBox fx:id="numberOfRounds" GridPane.rowIndex="2" GridPane.columnIndex="1" maxWidth="Infinity" />
 
-            <Label text="Bot goes first: " GridPane.rowIndex="3" GridPane.columnIndex="0">
+            <Label text="Player 1 Mode : " GridPane.rowIndex="3" GridPane.columnIndex="0">
                 <font>
                     <Font name="Arial Bold" size="12"/>
                 </font>
             </Label>
-            <CheckBox fx:id="isBotFirst" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            <ComboBox fx:id="playerMode1" GridPane.rowIndex="3" GridPane.columnIndex="1" maxWidth="Infinity" />
+
+             <Label text="Player 2 Mode : " GridPane.rowIndex="4" GridPane.columnIndex="0">
+                <font>
+                    <Font name="Arial Bold" size="12"/>
+                </font>
+            </Label>
+            <ComboBox fx:id="playerMode2" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="Infinity" />
+
+            <!-- <Label text="Bot goes first: " GridPane.rowIndex="5" GridPane.columnIndex="0">
+                <font>
+                    <Font name="Arial Bold" size="12"/>
+                </font>
+            </Label>
+            <CheckBox fx:id="isBotFirst" GridPane.rowIndex="5" GridPane.columnIndex="1" /> -->
         </GridPane>
     </top>
 
