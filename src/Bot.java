@@ -2,15 +2,15 @@ public class Bot {
 
     private final MoveController moveController;
 
-    public Bot(OutputFrameController controller, String mode) {
+    public Bot(OutputFrameController controller, String mode, boolean isPlayerX) {
         // edit this line to change the algorithm
 
         moveController = switch (mode) {
-            case "Minimax Bot" -> new Minimax(controller, false);
-            case "Local Search Bot" -> new LocalSearch(controller, false);
-            case "Genetic Search Bot" -> new GeneticAlgorithm(controller, false); // add genetic bot here
+            case "Minimax Bot" -> new Minimax(controller, isPlayerX);
+            case "Local Search Bot" -> new LocalSearch(controller, isPlayerX);
+            case "Genetic Search Bot" -> new GeneticAlgorithm(controller, isPlayerX); // add genetic bot here
 
-            default -> new LocalSearch(controller, false);
+            default -> new LocalSearch(controller, isPlayerX);
 
         };
     }

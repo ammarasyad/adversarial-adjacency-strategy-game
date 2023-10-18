@@ -92,8 +92,8 @@ public class OutputFrameController {
             this.isThereHuman = false;
         }
         // Start bot
-        this.botX = new Bot(this, playerMode1);
-        this.botO = new Bot(this, playerMode2);
+        this.botX = new Bot(this, playerMode1, true);
+        this.botO = new Bot(this, playerMode2, false);
         
 
         this.playerXTurn = !isBotFirst;
