@@ -1,6 +1,9 @@
 import javafx.scene.control.Button;
 
-import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Minimax implements MoveController {
 
@@ -11,7 +14,7 @@ public class Minimax implements MoveController {
     private final boolean player;
 
 
-    public Minimax(OutputFrameController controller, boolean isPlayerX) {
+    public Minimax(OutputFrameController controller, boolean isPlayerX){
         this.controller = controller;
         this.player = isPlayerX;
     }
@@ -19,9 +22,16 @@ public class Minimax implements MoveController {
     @Override
     public int[] move() {
         Board board = new Board(controller,player);
-        Object[] minimax = minimaxValue(new Object[]{board,new int[]{0,0}},true,MIN_VAL,MAX_VAL, controller.roundsLeft);
-        Object[] value = (Object[]) minimax[0];
-        return (int[]) value[1];
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Future<Object[]> temp = executorService.submit(()->minimaxValue(new Object[]{board,new int[]{0,0}},true,MIN_VAL,MAX_VAL, controller.roundsLeft));
+        int[] val = new int[2];
+        try {
+            Object[] minimax = temp.get();
+            Object[] value = (Object[]) minimax[0];
+            return (int[]) value[1];
+        }catch (InterruptedException | ExecutionException e){
+            return val;
+        }
     }
 
 
@@ -184,53 +194,19 @@ public class Minimax implements MoveController {
 
 
         public Board swapSurround(Board board, int row, int column){
-            if ((row> 0 && row<7)&&(column>0 && column <7)){
+            try {
                 board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
                 board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
                 board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
                 board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }
-            if ((row> 0 && row<7)&&(column>0)){
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }
-            if ((row> 0 && row<7)&&(column<7)){
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }
-            if ((row> 0)&&(column>0 && column <7)){
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-            }
-            if ((row<7)&&(column>0 && column <7)){
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }
-            if ((row> 0)&&(column>0)){
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-            }
-            if ((row > 0)&&(column <7)){
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-            }
-            if ((row<7)&&(column <7)){
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }
-            if ((row<7)&&(column>0)){
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
             }
             return board;
         }
 
         private static boolean isEmpty(String gridValue) {
-            return gridValue.isEmpty();
+            return gridValue.equals("");
         }
     }
 }
