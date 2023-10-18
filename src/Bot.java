@@ -8,7 +8,7 @@ public class Bot {
         moveController = switch (mode) {
             case "Minimax Bot" -> new Minimax(controller, false);
             case "Local Search Bot" -> new LocalSearch(controller, false);
-            case "Genetic Search Bot" -> new LocalSearch(controller, false); // add genetic bot here
+            case "Genetic Search Bot" -> new GeneticAlgorithm(controller, false); // add genetic bot here
 
             default -> new LocalSearch(controller, false);
 

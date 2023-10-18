@@ -4,8 +4,12 @@ import java.util.*;
 
 public class GeneticAlgorithm implements MoveController{
     private final OutputFrameController controller;
+    private boolean isPlayerX=false;
 
-    public  GeneticAlgorithm(OutputFrameController controller){ this.controller=controller;}
+    public  GeneticAlgorithm(OutputFrameController controller,boolean isPlayerX){
+        this.controller=controller;
+        this.isPlayerX=isPlayerX;
+    }
 
 
     @Override
@@ -19,6 +23,12 @@ public class GeneticAlgorithm implements MoveController{
             for (int j=0;j<m;j++){
                 boardString[i][j]=board[i][j].getText();
             }
+        }
+        String botSymbol="O";
+        String Opponent="X";
+        if (this.isPlayerX){
+            botSymbol="X";
+            Opponent="O";
         }
         List<Chromosome> chromosomes=new ArrayList<Chromosome>();
         List<Chromosome> ret=generate(boardString,chromosomes,false,"O","X",2);
@@ -35,6 +45,11 @@ public class GeneticAlgorithm implements MoveController{
         for (int i=0;i<10;i++){
             newChromosome=newCrossover(boardString,newChromosome,0,"O","X");
         }
+        for (Chromosome c :
+                newChromosome) {
+            System.out.println(c.toString());
+        }
+
         return newChromosome.stream().max(Comparator.comparing(v -> v.getFitness())).get().getGen().get(0);
 //        return rett.get(0).getGen().get(0);
     }
@@ -107,113 +122,34 @@ public class GeneticAlgorithm implements MoveController{
 
                 List<List<Chromosome>> ret=new ArrayList<List<Chromosome>>();
                 List<Chromosome> rett=new ArrayList<Chromosome>();
-                for (Chromosome chromosome:
-                     newChromosomes) {
-                    newBoard=new String[8][8];
-                    for (int i=0;i<8;i++){
-                        for (int j=0;j<8;j++){
-                            newBoard[i][j]=board[i][j];
-                        }
-                    }
-//                    System.out.println("aaaaa");
-                    int[] botMove=chromosome.getGen().get(chromosome.getGen().size()-1);
-                    newBoard[botMove[0]][botMove[1]]=botSymbol;
-                    if (botMove[0]==0){
-                        if (botMove[1]==0){
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                        } else if (botMove[1]>0 && botMove[1]<7){
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        } else if (botMove[1]==7){
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        }
-                    } else if (botMove[0]>0 &&botMove[0]<7){
-                        if (botMove[1]==0){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                        } else if (botMove[1]>0 && botMove[1]<7){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        } else if (botMove[1]==7){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]+1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]+1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        }
-                    } else if (botMove[0]==7){
-                        if (botMove[1]==0){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                        } else if (botMove[1]>0 && botMove[1]<7){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]+1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]+1]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        } else if (botMove[1]==7){
-                            if (newBoard[botMove[0]-1][botMove[1]].equals(opponentSymbol)){
-                                newBoard[botMove[0]-1][botMove[1]]=botSymbol;
-                            }
-                            if (newBoard[botMove[0]][botMove[1]-1].equals(opponentSymbol)){
-                                newBoard[botMove[0]][botMove[1]-1]=botSymbol;
-                            }
-                        }
-                    }
+                newBoard=copyBoard(board);
+//                for (Chromosome chromosome:
+//                     newChromosomes) {
+//                    newBoard=copyBoard(board);
+//
+////                    System.out.println("aaaaa");
+//                    int[] botMove=chromosome.getGen().get(chromosome.getGen().size()-1);
+//                    newBoard=updateBoard(newBoard,botMove,botSymbol,opponentSymbol);
+//
+//                    chromosome.setFitness(fitness(newBoard,botSymbol,opponentSymbol));
+//                    List<Chromosome> temp = generate(newBoard,newChromosomes,isOpponentTurn,botSymbol,opponentSymbol,count-1);
+//                    for (Chromosome c :
+//                            temp) {
+//                        if (!isInside(rett, c)) {
+//                            rett.add(c);
+//                        }
+//                    }
+//                }
+                List<Chromosome> temp = generate(newBoard,newChromosomes,isOpponentTurn,botSymbol,opponentSymbol,count-1);
 
-                    chromosome.setFitness(fitness(newBoard,botSymbol,opponentSymbol));
-                    List<Chromosome> temp = generate(newBoard,newChromosomes,isOpponentTurn,botSymbol,opponentSymbol,count-1);
-                    for (Chromosome c :
-                            temp) {
-                        if (!isInside(rett, c)) {
-                            rett.add(c);
-                        }
+//                rett.addAll(generate(newBoard,newChromosomes,isOpponentTurn,botSymbol,opponentSymbol,count-1));
+                for (Chromosome c:
+                     temp) {
+                    int[] botMove=c.getGen().get(c.getGen().size()-1);
+                    newBoard=updateBoard(newBoard,botMove,botSymbol,opponentSymbol);
+                    c.setFitness(fitness(newBoard,botSymbol,opponentSymbol));
+                    if (!isInside(rett,c)){
+                        rett.add(c);
                     }
                 }
                 System.out.println(Integer.toString(rett.size()));
@@ -427,7 +363,8 @@ public class GeneticAlgorithm implements MoveController{
             Chromosome chromosome2 = select(chromosomes);
             newChromosomes.addAll(crossover(chromosome1,chromosome2,crossoverPoint));
         }
-        return newFitness(board,newChromosomes,botSymbol,opponentSymbol);
+        newChromosomes=newFitness(board,newChromosomes,botSymbol,opponentSymbol);
+        return fitnessFunction(newChromosomes);
     }
 
     public Chromosome select(List<Chromosome> chromosomes){
@@ -457,6 +394,8 @@ public class GeneticAlgorithm implements MoveController{
         String[][] newBoard= copyBoard(board);
         List<Chromosome> newChromosomes = new ArrayList<Chromosome>();
         newChromosomes.addAll(chromosomes);
+//        float sum=(float) chromosomes.stream().mapToDouble(o->o.getFitness()).sum();
+//        System.out.println(sum);
         for (Chromosome c :
                 newChromosomes) {
             newBoard=copyBoard(board);
