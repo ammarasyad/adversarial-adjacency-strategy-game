@@ -41,9 +41,9 @@ public class GeneticAlgorithm implements MoveController{
 //                rett) {
 //            System.out.println(r.toString());
 //        }
-        List<Chromosome> newChromosome=newCrossover(boardString,rett,0,botSymbol, opponentSymbol);
+        List<Chromosome> newChromosome=newCrossover(boardString,rett,1,botSymbol, opponentSymbol);
         for (int i=0;i<10;i++){
-            newChromosome=newCrossover(boardString,newChromosome,0,botSymbol,opponentSymbol);
+            newChromosome=newCrossover(boardString,newChromosome,1,botSymbol,opponentSymbol);
         }
         for (Chromosome c :
                 newChromosome) {
@@ -145,9 +145,11 @@ public class GeneticAlgorithm implements MoveController{
 //                rett.addAll(generate(newBoard,newChromosomes,isOpponentTurn,botSymbol,opponentSymbol,count-1));
                 for (Chromosome c:
                      temp) {
+                    newBoard=copyBoard(board);
                     int[] botMove=c.getGen().get(c.getGen().size()-1);
                     newBoard=updateBoard(newBoard,botMove,botSymbol,opponentSymbol);
                     c.setFitness(fitness(newBoard,botSymbol,opponentSymbol));
+//                    System.out.println(c.toString());
                     if (!isInside(rett,c)){
                         rett.add(c);
                     }
@@ -358,7 +360,12 @@ public class GeneticAlgorithm implements MoveController{
 
     public List<Chromosome> newCrossover(String[][] board,List<Chromosome> chromosomes,int crossoverPoint,String botSymbol, String opponentSymbol){
         List<Chromosome> newChromosomes=new ArrayList<Chromosome>();
-        for (int i=0;i<10;i++){
+//        System.out.println("newc"+chromosomes.size());
+//        for (Chromosome c :
+//                chromosomes) {
+//            System.out.println("aa "+ c.toString());
+//        }
+        for (int i=0;i<20;i++){
             Chromosome chromosome1 = select(chromosomes);
             Chromosome chromosome2 = select(chromosomes);
             newChromosomes.addAll(crossover(chromosome1,chromosome2,crossoverPoint));
@@ -405,7 +412,9 @@ public class GeneticAlgorithm implements MoveController{
                 newBoard=updateBoard(newBoard,getBestOpponentMove(newBoard,botSymbol),opponentSymbol,botSymbol);
             }
             c.setFitness(fitness(board,botSymbol,opponentSymbol));
+//            System.out.println("newf "+c.getFitness());
         }
+
         return newChromosomes;
     }
 
