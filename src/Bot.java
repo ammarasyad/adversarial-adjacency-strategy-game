@@ -4,19 +4,15 @@ public class Bot {
 
     public Bot(OutputFrameController controller, String mode) {
         // edit this line to change the algorithm
-        MoveController selectedController;
-        if (mode.equals("Minimax Bot")) {
-            selectedController = new Minimax(controller, false);
-        }
-        else if (mode.equals("Local Search Bot")) {
-            selectedController = new LocalSearch(controller);
-        } else if (mode.equals("Genetic Search Bot")) {
-            selectedController = new LocalSearch(controller); // add genetic bot here
-        } else { // else dont assign, since it will ultimately be prevented by moveBot()
-            selectedController = new LocalSearch(controller); // whatever fill as to make the compilation wont go error
-        }
 
-        moveController = selectedController;
+        moveController = switch (mode) {
+            case "Minimax Bot" -> new Minimax(controller, false);
+            case "Local Search Bot" -> new LocalSearch(controller, false);
+            case "Genetic Search Bot" -> new LocalSearch(controller, false); // add genetic bot here
+
+            default -> new LocalSearch(controller, false);
+
+        };
     }
 
     // Move using Local Search Algorithm

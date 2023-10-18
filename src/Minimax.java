@@ -8,10 +8,10 @@ public class Minimax implements MoveController {
     static int MIN_VAL = -64;
 
     private final OutputFrameController controller;
-    private final Boolean player;
+    private final boolean player;
 
 
-    public Minimax(OutputFrameController controller, Boolean isPlayerX){
+    public Minimax(OutputFrameController controller, boolean isPlayerX) {
         this.controller = controller;
         this.player = isPlayerX;
     }
@@ -79,14 +79,14 @@ public class Minimax implements MoveController {
 
     private static class Board {
         String[][] states = new String[8][8]; // can be optimized by turning it into a String of 64 char length
-        Boolean isPlayerX;
+        boolean isPlayerX;
 
-        public Board(String[][] states, Boolean isPlayerX) {
+        public Board(String[][] states, boolean isPlayerX) {
             this.states = states; // be careful of parameter input that doesn't comply with 8x8 rule
             this.isPlayerX = isPlayerX;
         }
 
-        public Board(OutputFrameController controller, Boolean isPlayerX){
+        public Board(OutputFrameController controller, boolean isPlayerX){
             Button[][] temp = controller.getButtons();
             for (int i = 0; i<controller.getButtons().length ; i++){
                 for (int j = 0; j<controller.getButtons().length ; j++){
@@ -124,7 +124,7 @@ public class Minimax implements MoveController {
             return (isPlayerX) ? (countX - countO) : (countO - countX);
         }
 
-        public Boolean isBoardFull(){
+        public boolean isBoardFull(){
             for (int i = 0;i<8;i++){
                 for (int j = 0; j<8;j++){
                     if (isEmpty(this.states[i][j])) return false;
@@ -230,7 +230,7 @@ public class Minimax implements MoveController {
         }
 
         private static boolean isEmpty(String gridValue) {
-            return gridValue.equals("");
+            return gridValue.isEmpty();
         }
     }
 }
