@@ -22,16 +22,9 @@ public class Minimax implements MoveController {
     @Override
     public int[] move() {
         Board board = new Board(controller, player);
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Future<Object[]> temp = executorService.submit(() -> minimaxValue(new Object[]{board, new int[]{0, 0}}, true, MIN_VAL, MAX_VAL, controller.roundsLeft));
-        int[] val = new int[2];
-        try {
-            Object[] minimax = temp.get();
-            Object[] value = (Object[]) minimax[0];
-            return (int[]) value[1];
-        } catch (InterruptedException | ExecutionException e) {
-            return val;
-        }
+        Object[] minimax = minimaxValue(new Object[]{board, new int[]{0, 0}}, true, MIN_VAL, MAX_VAL, controller.roundsLeft);
+        Object[] value = (Object[]) minimax[0];
+        return (int[]) value[1];
     }
 
 
@@ -44,7 +37,7 @@ public class Minimax implements MoveController {
         if (board.isBoardFull()) {
             return new Object[]{nodeValues, board.getFunctionValue()};
         }
-        if (round == 0) {
+        if (round == controller.roundsLeft - 3) {
             return new Object[]{nodeValues, board.getFunctionValue()};
         }
 
