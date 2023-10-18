@@ -1,10 +1,8 @@
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,9 +10,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The OutputFrameController class.  It controls button input from the users when
@@ -299,23 +297,29 @@ public class OutputFrameController {
         // Search for adjacency for X's and O's or vice versa, and replace them.
         // Update scores for X's and O's accordingly.
         for (int x = startRow; x <= endRow; x++) {
-            for (int y = startColumn; y <= endColumn; y++) {
-                if (this.playerXTurn) {
-                    if (this.buttons[x][y].getText().equals("O")) {
-                        this.buttons[x][y].setText("X");
-                        this.playerXScore++;
-                        this.playerOScore--;
-                    }
-                } else if (this.buttons[x][y].getText().equals("X")) {
-                    this.buttons[x][y].setText("O");
-                    this.playerOScore++;
-                    this.playerXScore--;
-                }
-            }
+            this.setPlayerScore(x, j);
+        }
+
+        for (int y = startColumn; y <= endColumn; y++) {
+            this.setPlayerScore(i, y);
         }
 
         this.playerXScoreLabel.setText(String.valueOf(this.playerXScore));
         this.playerOScoreLabel.setText(String.valueOf(this.playerOScore));
+    }
+
+    private void setPlayerScore(int x, int y) {
+        if (this.playerXTurn) {
+            if (this.buttons[x][y].getText().equals("O")) {
+                this.buttons[x][y].setText("X");
+                this.playerXScore++;
+                this.playerOScore--;
+            }
+        } else if (this.buttons[x][y].getText().equals("X")) {
+            this.buttons[x][y].setText("O");
+            this.playerOScore++;
+            this.playerXScore--;
+        }
     }
 
 
