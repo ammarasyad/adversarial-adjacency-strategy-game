@@ -25,13 +25,13 @@ public class GeneticAlgorithm implements MoveController{
             }
         }
         String botSymbol="O";
-        String Opponent="X";
+        String opponentSymbol="X";
         if (this.isPlayerX){
             botSymbol="X";
-            Opponent="O";
+            opponentSymbol="O";
         }
         List<Chromosome> chromosomes=new ArrayList<Chromosome>();
-        List<Chromosome> ret=generate(boardString,chromosomes,false,"O","X",2);
+        List<Chromosome> ret=generate(boardString,chromosomes,false,botSymbol, opponentSymbol,2);
         List<Chromosome> rett=fitnessFunction(ret);
 //        Chromosome chromosome1 = select(rett);
 //        Chromosome chromosome2 = select(rett);
@@ -41,9 +41,9 @@ public class GeneticAlgorithm implements MoveController{
 //                rett) {
 //            System.out.println(r.toString());
 //        }
-        List<Chromosome> newChromosome=newCrossover(boardString,rett,0,"O","X");
+        List<Chromosome> newChromosome=newCrossover(boardString,rett,0,botSymbol, opponentSymbol);
         for (int i=0;i<10;i++){
-            newChromosome=newCrossover(boardString,newChromosome,0,"O","X");
+            newChromosome=newCrossover(boardString,newChromosome,0,botSymbol,opponentSymbol);
         }
         for (Chromosome c :
                 newChromosome) {
