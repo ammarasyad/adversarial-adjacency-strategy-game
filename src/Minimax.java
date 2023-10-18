@@ -14,22 +14,22 @@ public class Minimax implements MoveController {
     private final boolean player;
 
 
-    public Minimax(OutputFrameController controller, boolean isPlayerX){
+    public Minimax(OutputFrameController controller, boolean isPlayerX) {
         this.controller = controller;
         this.player = isPlayerX;
     }
 
     @Override
     public int[] move() {
-        Board board = new Board(controller,player);
+        Board board = new Board(controller, player);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Future<Object[]> temp = executorService.submit(()->minimaxValue(new Object[]{board,new int[]{0,0}},true,MIN_VAL,MAX_VAL, controller.roundsLeft));
+        Future<Object[]> temp = executorService.submit(() -> minimaxValue(new Object[]{board, new int[]{0, 0}}, true, MIN_VAL, MAX_VAL, controller.roundsLeft));
         int[] val = new int[2];
         try {
             Object[] minimax = temp.get();
             Object[] value = (Object[]) minimax[0];
             return (int[]) value[1];
-        }catch (InterruptedException | ExecutionException e){
+        } catch (InterruptedException | ExecutionException e) {
             return val;
         }
     }
@@ -37,14 +37,14 @@ public class Minimax implements MoveController {
 
     // find optimal value of all boards using minimax algorithm and a-b pruning
     // TODO: find the corresponding best next step based on the optimal value calculated
-    public Object[] minimaxValue (Object[] nodeValues, boolean isMaximizing, int alpha, int beta, int round) {
+    public Object[] minimaxValue(Object[] nodeValues, boolean isMaximizing, int alpha, int beta, int round) {
         Board board = (Board) nodeValues[0];
         Object[] bestBranch = new Object[]{nodeValues, 0};
 
         if (board.isBoardFull()) {
             return new Object[]{nodeValues, board.getFunctionValue()};
         }
-        if (round==0){
+        if (round == 0) {
             return new Object[]{nodeValues, board.getFunctionValue()};
         }
 
@@ -54,7 +54,7 @@ public class Minimax implements MoveController {
             bestVal = MIN_VAL;
 
             for (Object[] objects : branch) {
-                Object[] currentVal = minimaxValue(objects, false, alpha, beta, round-1);
+                Object[] currentVal = minimaxValue(objects, false, alpha, beta, round - 1);
                 int temp = (int) currentVal[1];
 
                 bestVal = Math.max(bestVal, temp);
@@ -71,7 +71,7 @@ public class Minimax implements MoveController {
             bestVal = MAX_VAL;
 
             for (Object[] objects : branch) {
-                Object[] currentVal = minimaxValue(objects, true, alpha, beta, round-1);
+                Object[] currentVal = minimaxValue(objects, true, alpha, beta, round - 1);
                 int temp = (int) currentVal[1];
 
                 bestVal = Math.min(bestVal, temp);
@@ -96,10 +96,10 @@ public class Minimax implements MoveController {
             this.isPlayerX = isPlayerX;
         }
 
-        public Board(OutputFrameController controller, boolean isPlayerX){
+        public Board(OutputFrameController controller, boolean isPlayerX) {
             Button[][] temp = controller.getButtons();
-            for (int i = 0; i<controller.getButtons().length ; i++){
-                for (int j = 0; j<controller.getButtons().length ; j++){
+            for (int i = 0; i < controller.getButtons().length; i++) {
+                for (int j = 0; j < controller.getButtons().length; j++) {
                     this.states[i][j] = temp[i][j].getText();
                 }
             }
@@ -125,7 +125,7 @@ public class Minimax implements MoveController {
                 for (int j = 0; j < 8; j++) {
                     if (states[i][j].equals("X")) {
                         countX++;
-                    } else if (states[i][j].equals("O")){
+                    } else if (states[i][j].equals("O")) {
                         countO++;
                     }
                 }
@@ -134,11 +134,11 @@ public class Minimax implements MoveController {
             return (isPlayerX) ? (countX - countO) : (countO - countX);
         }
 
-        public boolean isBoardFull(){
-            for (int i = 0;i<8;i++){
-                for (int j = 0; j<8;j++){
+        public boolean isBoardFull() {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
                     if (isEmpty(this.states[i][j])) return false;
-                 }
+                }
             }
             return true;
         }
@@ -148,7 +148,7 @@ public class Minimax implements MoveController {
 
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    if(isEmpty(states[i][j])) {
+                    if (isEmpty(states[i][j])) {
                         count++;
                     }
                 }
@@ -181,9 +181,9 @@ public class Minimax implements MoveController {
 
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    if(isEmpty(states[i][j])) {
+                    if (isEmpty(states[i][j])) {
                         children[index] = this.makeNewChild(isPlayer, i, j);
-                        child[index] = new Object[]{swapSurround(children[index], i, j),new int[]{i,j}};
+                        child[index] = new Object[]{swapSurround(children[index], i, j), new int[]{i, j}};
                         index++;
                     }
                 }
@@ -193,20 +193,20 @@ public class Minimax implements MoveController {
         }
 
 
-        public Board swapSurround(Board board, int row, int column){
+        public Board swapSurround(Board board, int row, int column) {
             try {
-                board.states[row-1][column] = (board.isPlayerX && !isEmpty(board.states[row-1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row-1][column]))?"Y":"" ;
-                board.states[row][column-1] = (board.isPlayerX && !isEmpty(board.states[row][column-1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column-1]))?"Y":"" ;
-                board.states[row][column+1] = (board.isPlayerX && !isEmpty(board.states[row][column+1]))?"X":(!board.isPlayerX && !isEmpty(board.states[row][column+1]))?"Y":"" ;
-                board.states[row+1][column] = (board.isPlayerX && !isEmpty(board.states[row+1][column]))?"X":(!board.isPlayerX && !isEmpty(board.states[row+1][column]))?"Y":"" ;
-            }catch (IndexOutOfBoundsException e){
+                board.states[row - 1][column] = (board.isPlayerX && !isEmpty(board.states[row - 1][column])) ? "X" : (!board.isPlayerX && !isEmpty(board.states[row - 1][column])) ? "Y" : "";
+                board.states[row][column - 1] = (board.isPlayerX && !isEmpty(board.states[row][column - 1])) ? "X" : (!board.isPlayerX && !isEmpty(board.states[row][column - 1])) ? "Y" : "";
+                board.states[row][column + 1] = (board.isPlayerX && !isEmpty(board.states[row][column + 1])) ? "X" : (!board.isPlayerX && !isEmpty(board.states[row][column + 1])) ? "Y" : "";
+                board.states[row + 1][column] = (board.isPlayerX && !isEmpty(board.states[row + 1][column])) ? "X" : (!board.isPlayerX && !isEmpty(board.states[row + 1][column])) ? "Y" : "";
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
             return board;
         }
 
         private static boolean isEmpty(String gridValue) {
-            return gridValue.equals("");
+            return gridValue.isEmpty();
         }
     }
 }
